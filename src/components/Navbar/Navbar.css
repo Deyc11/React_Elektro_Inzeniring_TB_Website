@@ -1,0 +1,47 @@
+nav.navbar {
+  display: flex; /* Razporedi elemente vodoravno */
+  justify-content: space-between; /* Razmik med levo in desno stranjo */
+  align-items: center; /* Navpično poravnaj elemente */
+  padding: 20px; /* Dodaj notranji rob */
+  background-color: #c42c3c; /* Ozadje */
+  color: white; /* Barva besedila */
+  width: 100%; /* Razširi navbar čez celotno širino */
+  position: fixed; /* Navbar ostane na vrhu strani */
+  top: 0; /* Poravnava z vrhom */
+  left: 0; /* Poravnava z levo stranjo */
+  z-index: 10; /* Prednost pred drugimi elementi */
+}
+
+.left-menu {
+  display: flex;
+  align-items: center;
+}
+
+.home-icon {
+  font-size: 24px; /* Velikost ikone */
+  cursor: pointer; /* Spremeni kazalec ob premiku miške */
+}
+
+.home-icon:hover{
+  color: #8fe28a;
+}
+
+.right-menu {
+  display: flex;
+  align-items: center;
+}
+
+.right-menu span {
+  margin-right: 10px; /* Razmik med besedilom in odjavo */
+}
+
+.sign-out {
+  margin-left: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+}
+
+.sign-out:hover {
+  color: #8fe28a; /* Barva ob premiku miške */
+}

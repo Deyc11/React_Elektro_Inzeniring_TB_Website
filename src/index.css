@@ -1,0 +1,10 @@
+html, body {
+  margin: 0; /* Odstrani privzete margine */
+  padding: 0; /* Odstrani privzete paddinge */
+  height: 100%; /* Poglejmo vse na celotni višini zaslona */
+}
+
+/* Prepričajmo se, da bo content pod navbarjem */
+.container {
+  min-height: 100vh; /* Zagotovi, da bo container pokrival celoten zaslon */
+}
