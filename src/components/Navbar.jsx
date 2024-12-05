@@ -1,5 +1,5 @@
-import React from "react";
-import "./Navbar.css";
+import React from 'react';
+import '../styles/styles.css';
 
 const Navbar = () => {
   return (
@@ -8,8 +8,10 @@ const Navbar = () => {
         <i className="fas fa-home home-icon"></i>
       </div>
       <div className="right-menu">
-        <span>Welcome, <strong>[Ime Uporabnika]</strong><a href="signout_link" className="sign-out">Sign Out</a></span>
-        
+        <span>
+          Dobrodošli, <strong>[Ime Uporabnika]</strong>
+          <a href="signout_link" className="sign-out">Odjava</a>
+        </span>
       </div>
     </nav>
   );

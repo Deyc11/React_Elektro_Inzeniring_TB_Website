@@ -1,0 +1,156 @@
+
+nav.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #c42c3c;
+  color: white;
+}
+
+.left-menu {
+  display: flex;
+  align-items: center;
+}
+
+.home-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.home-icon:hover{
+  color: #e1fddfe1;
+}
+
+.right-menu {
+  display: flex;
+  align-items: center;
+}
+
+.sign-out {
+  margin-left: 5px;
+  text-decoration: none;
+  color: white;
+}
+
+.sign-out:hover {
+  color: #e1fddfe1;
+}
+
+/* Box Style*/
+.window-box {
+  background-color: #f0f0f0b7; 
+  border-radius: 8px;
+}
+
+h3 {
+  color: #c42c3c;
+  margin-bottom: 20px;
+}
+
+.list-group-item{
+  background-color: #ffffff; 
+  border: 1px solid #ddd; 
+}
+
+.list-group-item:hover {
+  background-color: #c42c3c;
+  color: #ffffff;
+}
+
+button.btn {
+  background-color: #c42c3c;
+  color: white;
+}
+
+button.btn:hover {
+  background-color: #a3222f;
+}
+
+
+.add-project {
+bottom: 30px;
+right: 30px;
+width: 50px;
+height: 50px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.2rem;
+color: white;
+border: 2px solid #878895;
+opacity: 0.8;
+border-radius: 50%;
+background-color: #c42c3c;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.add-project:hover {
+opacity: 1;
+transform: scale(1.1);
+}
+
+.add-project-wrapper {
+position: absolute;
+bottom: 40px;
+left: 50%;
+width: 90%;
+max-height: 0;
+overflow: hidden;
+border-radius: 10px;
+background-color: white;
+transform: translateX(-50%);
+transition: max-height 0.4s ease;
+}
+.add-project-wrapper .title{
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.add-project-wrapper.active {
+max-height: 300px;
+}
+
+/* Additional styles for the form inputs and buttons */
+.add-project-header, .add-project-body, .add-project-footer {
+padding: 10px;
+
+}
+
+.add-project-input input {
+width: 100%;
+padding: 10px;
+margin-top: 5px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+.add-project-input select, input {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #ccc; 
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333333;
+  font-size: 1rem; 
+}
+
+
+.add-project-input select option {
+  color: black; 
+}
+
+
+.add-project-input input:hover {
+  border-color: #a3222f; 
+  transition: 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .right-menu {
+      font-size: 14px;
+  }
+}
+
