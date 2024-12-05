@@ -1,9 +1,8 @@
 import React from "react";
-import SearchBox from "./SearchBox"
-import ProjectList from "./ProjectList"
-import CalendarTodo from "./CalendarTodo"
-import "./ControlPanel.css"; // Dodatni CSS za ControlPanel
-
+import SearchBox from "../SearchBox/SearchBox"
+import ProjectList from "../ProjectList/ProjectList"
+import CalendarTodo from "../CalendarTodo/CalendarTodo"
+import "./ControlPanel.css";
 const ControlPanel = () => {
   return (
     <div className="container mt-5">

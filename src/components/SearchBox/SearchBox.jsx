@@ -1,5 +1,5 @@
 import React from "react";
-import "./ControlPanel.css"
+import "./SearchBox.css"
 
 const SearchBox = () => {
   return (
