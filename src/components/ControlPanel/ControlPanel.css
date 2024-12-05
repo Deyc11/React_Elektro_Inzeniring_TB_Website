@@ -1,40 +1,28 @@
-/* Poskrbi, da control panel zavzame celotno širino */
-.container {
-    width: 100%; /* Celotna širina zaslona */
-    max-width: 100%; /* Zagotovi, da se ne omeji na privzeto max širino */
-    padding: 0 20px; /* Dodaj notranje robove za manjši razmik */
-    padding-top: 80px;
-    margin-top: 80px; /* Povečaj zgornji rob za prostor pod navbarjem */
-  }
-  
-  /* Spremeni vsebino nadzorne plošče */
-  .row {
-    display: flex; /* Postavitev v vrstico */
-    justify-content: space-between; /* Razporedi vsebino */
-    align-items: flex-start; /* Poravnava zgoraj */
-    width: 100%; /* Celotna širina */
-    margin: 0; /* Odstrani odvečne razmike */
-  }
-  
-  /* Poskrbi, da bo vsak container imel enako širino */
-  .col-md-4 {
-    width: 32%; /* Vsak container bo imel 32% širine, da bo vse v vrstici */
-    margin-bottom: 20px; /* Dodatni razmik med containerji */
-  }
-  
-  /* Zasnova "window-box" za vsak container */
-  .window-box {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-  }
-  
-  h3 {
-    color: #c42c3c;
-  }
-  
-  @media (max-width: 768px) {
-    .container {
-      margin-top: 100px; /* Večji razmik na manjših zaslonih */
-    }
-  }
+.window-box {
+  background-color: #f0f0f0b7; /* Light background for window */
+  border-radius: 8px;
+}
+
+h3 {
+  color: #c42c3c;
+  margin-bottom: 20px;
+}
+
+.list-group-item{
+  background-color: #ffffff; /* White background for list items */
+  border: 1px solid #ddd; /* Light border */
+}
+
+.list-group-item:hover {
+  background-color: #c42c3c;
+  color: #ffffff;
+}
+
+button.btn {
+  background-color: #c42c3c;
+  color: white;
+}
+
+button.btn:hover {
+  background-color: #a3222f;
+}

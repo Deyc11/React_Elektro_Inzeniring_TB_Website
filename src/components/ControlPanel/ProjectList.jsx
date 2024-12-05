@@ -1,29 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./ProjectList.css";
+import "./ControlPanel.css"
+
+
 
 const ProjectList = () => {
-  // State za vidnost obrazca
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const formRef = useRef(null); // Referenca na obrazec za sledenje klikom izven njega
+  const formRef = useRef(null);
 
-  // Funkcija za prikaz obrazca
   const toggleFormVisibility = () => {
-    setIsFormVisible(!isFormVisible); // Preklopi stanje za vidnost obrazca
+    setIsFormVisible(!isFormVisible); // Toggle form visibility
   };
 
-  // Funkcija za zapiranje obrazca
   const closeForm = () => {
-    setIsFormVisible(false);
+    setIsFormVisible(false); // Close the form
   };
 
-  // Zapri obrazec, če klikneš izven njega
+  // Close the form when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
         closeForm();
       }
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
@@ -38,19 +36,17 @@ const ProjectList = () => {
         <li className="list-group-item">Vsi Projekti</li>
       </ul>
 
-      {/* Gumb za prikaz obrazca */}
+      {/* "+" button */}
       <button className="add-project" onClick={toggleFormVisibility}>
         <i className="fas fa-plus"></i>
       </button>
 
-      {/* Obrazec za dodajanje projekta */}
+      {/* Project form */}
       {isFormVisible && (
         <div className="add-project-wrapper active" ref={formRef}>
           <div className="add-project-header">
             <div className="title">Nov Projekt</div>
-            <button className="close" onClick={closeForm}>
-              X
-            </button>
+            <button className="close" onClick={closeForm}>X</button>
           </div>
           <div className="add-project-body">
             <div className="add-project-input">
@@ -58,9 +54,7 @@ const ProjectList = () => {
             </div>
             <div className="add-project-input">
               <select className="project-type">
-                <option value="" disabled selected>
-                  Vrsta Projekta
-                </option>
+                <option value="" disabled selected>Vrsta Projekta</option>
                 <option value="meritve">Meritve</option>
                 <option value="Elektro_projekti">Elektro Projekti</option>
                 <option value="Energetika">Energetika</option>
@@ -78,5 +72,4 @@ const ProjectList = () => {
     </div>
   );
 };
-
 export default ProjectList;

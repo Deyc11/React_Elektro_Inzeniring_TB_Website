@@ -8,8 +8,8 @@ const Navbar = () => {
         <i className="fas fa-home home-icon"></i>
       </div>
       <div className="right-menu">
-        <span>Welcome, <strong>[Ime Uporabnika]</strong></span>
-        <a href="signout_link" className="sign-out">Sign Out</a>
+        <span>Welcome, <strong>[Ime Uporabnika]</strong><a href="signout_link" className="sign-out">Sign Out</a></span>
+        
       </div>
     </nav>
   );
