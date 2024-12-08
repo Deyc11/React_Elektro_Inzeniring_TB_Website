@@ -1,14 +1,12 @@
 import React from 'react';
 import './styles/styles.css';
-import Navbar from './components/Navbar';
-import ControlPanel from './components/ControlPanel';
+import HomePage from './pages/HomePage';
 
 
 const App = () => {
   return (
     <div>
-      <Navbar />
-      <ControlPanel />
+      <HomePage />
     </div>
   );
 };
