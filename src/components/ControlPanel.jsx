@@ -7,11 +7,8 @@ const ControlPanel = () => {
   return (
     <div className="container mt-5">
       <div className="row">
-        {/* Iskanje po projektih */}
         <IskanjeBox />
-        {/* Projekti */}
         <ProjektiBox />
-        {/* Koledar */}
         <KoledarBox />
       </div>
     </div>
