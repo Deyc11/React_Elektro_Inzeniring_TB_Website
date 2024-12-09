@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles//Koledar.css"; // External CSS for styling (optional but recommended)
+import "../styles/Koledar.css"; // External CSS for styling (optional but recommended)
 
 const months = [
   "Januar",
@@ -15,16 +15,6 @@ const months = [
   "November",
   "December",
 ];
-
-const customWeekdays = {
-  Mon: "PON",
-  Tue: "TOR",
-  Wed: "SRE",
-  Thu: "ČET",
-  Fri: "PET",
-  Sat: "SOB",
-  Sun: "NED",
-};
 
 const Koledar = () => {
   const today = new Date();
@@ -131,8 +121,8 @@ const Koledar = () => {
   };
 
   const formatTime = (time) => {
-    let formattedTime = time.replace(/[^0-9:]/g, ""); // Remove non-numeric characters except colon
-    if (formattedTime.length === 2 && !formattedTime.includes(":")) formattedTime += ":";
+    let formattedTime = time.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+    if (formattedTime.length === 2) formattedTime += ":";
     if (formattedTime.length > 5) formattedTime = formattedTime.slice(0, 5);
     return formattedTime;
   };
@@ -186,11 +176,7 @@ const Koledar = () => {
 
       <div className="right">
         <div className="today-date">
-          <div className="event-day">
-            {customWeekdays[
-              new Date(year, month, activeDay).toLocaleDateString("en-US", { weekday: "short" })
-            ]}
-          </div>
+          <div className="event-day">{new Date(year, month, activeDay).toLocaleDateString("en-US", { weekday: "short" })}</div>
           <div className="event-date">
             {activeDay} {months[month]} {year}
           </div>

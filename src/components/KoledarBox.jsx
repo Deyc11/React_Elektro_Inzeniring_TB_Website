@@ -1,16 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const KoledarBox = () => {
-    return (
-        <div className="col-md-4 mb-4">
-          <div className="window-box p-4 shadow-sm">
-            <h3>Koledar & To Do</h3>
-            <a href="./Calendar/index.html">
-              <button className="btn btn-primary">Pojdi na Koledar</button>
-            </a>
-          </div>
-        </div>
-    );
+  return (
+    <div className="col-md-4 mb-4">
+      <div className="window-box p-4 shadow-sm">
+        <h3>Koledar & To Do</h3>
+        <Link to="/koledar">
+          <button className="btn btn-primary">Pojdi na Koledar</button>
+        </Link>
+      </div>
+    </div>
+  );
 };
 
 export default KoledarBox;

@@ -1,11 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Uvozi Link
 import '../styles/styles.css';
 
 const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="left-menu">
-        <i className="fas fa-home home-icon"></i>
+        <Link to="/"> {/* Navigacija na domačo stran */}
+          <i className="fas fa-home home-icon"></i>
+        </Link>
       </div>
       <div className="right-menu">
         <span>
@@ -18,3 +21,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
