@@ -167,6 +167,7 @@ const Koledar = () => {
   }, [month, year, activeDay]);
 
   return (
+    <div className="koledar-page">
     <div className="container">
       <div className="calendar">
         <div className="month">
@@ -264,6 +265,7 @@ const Koledar = () => {
           <i className="fas fa-plus"></i>
         </button>
       </div>
+    </div>
     </div>
   );
 };
