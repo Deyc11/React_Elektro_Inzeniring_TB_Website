@@ -10,6 +10,7 @@ nav.navbar {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  margin-bottom: 10px;
   background-color: #c42c3c;
   color: white;
 }
