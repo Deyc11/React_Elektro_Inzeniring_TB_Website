@@ -1,32 +1,15 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
 
 const ProjectList = () => {
   const [isFormActive, setFormActive] = useState(false);
 
   const toggleForm = () => {
-    setFormActive(prevState => !prevState);
+    setFormActive((prevState) => !prevState);
   };
 
-  // Uporabimo useEffect za prepoznavanje klika zunaj forme
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      const formElement = document.querySelector(".add-project-wrapper");
-      const addButton = document.querySelector(".add-project");
-      
-      // Zapri formo, če je kliknjen zunanji del
-      if (!formElement.contains(e.target) && e.target !== addButton) {
-        setFormActive(false);
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-    
-    // Čistimo event listener, ko se komponenta odstrani
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+  const closeForm = () => {
+    setFormActive(false);
+  };
 
   return (
     <div>
@@ -37,6 +20,7 @@ const ProjectList = () => {
         <div className="add-project-wrapper active">
           <div className="add-project-header">
             <div className="title">Nov Projekt</div>
+            <i className="fas fa-times close" onClick={closeForm}></i>
           </div>
           <div className="add-project-body">
             <div className="add-project-input">
@@ -44,7 +28,7 @@ const ProjectList = () => {
             </div>
             <div className="add-project-input">
               <select placeholder="Vrsta Projekta" className="project-type">
-                <option value="" disabled selected>Vrsta Projekta</option>
+                <option value="" disabled defaultValue>Vrsta Projekta</option>
                 <option value="meritve">Meritve</option>
                 <option value="Elektro_projekti">Elektro Projekti</option>
                 <option value="Energetika">Energetika</option>
