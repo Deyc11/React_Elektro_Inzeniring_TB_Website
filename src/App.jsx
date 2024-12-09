@@ -1,12 +1,12 @@
 import React from 'react';
 import './styles/styles.css';
-import HomePage from './pages/HomePage';
+import KoledarPage from './pages/KoledarPage';
 
 
 const App = () => {
   return (
     <div>
-      <HomePage />
+      <KoledarPage />
     </div>
   );
 };
