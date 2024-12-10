@@ -1,52 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import "../styles/koledar.css"; // Poskrbi, da ta CSS pravilno deluje
 
 const ProjectList = () => {
-  const [isFormActive, setFormActive] = useState(false);
+  const [isAddProjectActive, setIsAddProjectActive] = useState(false);
 
-  const toggleForm = () => {
-    setFormActive((prevState) => !prevState);
-  };
-
-  const closeForm = () => {
-    setFormActive(false);
+  const toggleAddProject = () => {
+    setIsAddProjectActive((prevState) => !prevState);
   };
 
   return (
     <div>
-      <button className="add-project" onClick={toggleForm}>
+      {/* Gumb za odpiranje/zapiranje */}
+      <button className="add-project" onClick={toggleAddProject}>
         <i className="fas fa-plus"></i>
       </button>
-      {isFormActive && (
-        <div className="add-project-wrapper active">
-          <div className="add-project-header">
-            <div className="title">Nov Projekt</div>
-            <i className="fas fa-times close" onClick={closeForm}></i>
-          </div>
-          <div className="add-project-body">
-            <div className="add-project-input">
-              <input type="text" placeholder="Ime Projekta..." className="project-name" />
-            </div>
-            <div className="add-project-input">
-              <select placeholder="Vrsta Projekta" className="project-type">
-                <option value="" disabled defaultValue>Vrsta Projekta</option>
-                <option value="meritve">Meritve</option>
-                <option value="Elektro_projekti">Elektro Projekti</option>
-                <option value="Energetika">Energetika</option>
-              </select>
-            </div>
-            <div className="add-project-input">
-              <input type="text" placeholder="Naslov..." className="project_address" />
-            </div>
-            <div className="add-project-documents">
-              <input type="file" className="project-documents" />
-            </div>
-          </div>
-          <div className="add-project-footer">
-            <button className="btn btn-primary">Dodaj</button>
-          </div>
+
+      {/* Add Project Wrapper */}
+      <div className={`add-project-wrapper ${isAddProjectActive ? "active" : ""}`}>
+        <div className="add-project-header">
+          <div className="title">Dodaj Dogodek</div>
+          <i className="fas fa-times close" onClick={toggleAddProject}></i>
         </div>
-      )}
-    </div>
+        <div className="add-project-body">
+          <div className="add-project-input">
+            <input
+              type="text"
+              placeholder="Ime Dogodka"
+              className="project-name"
+            />
+          </div>
+          <div className="add-project-input">
+            <input
+              type="text"
+              placeholder="Kraj"
+            />
+          </div>
+          <div className="add-project-option">
+            <select className="project-type">
+              <option value="" disabled selected>Izberite vrsto projekta</option>
+              <option value="meritve">Meritve</option>
+              <option value="elektro_projekt">Elektro projekt</option>
+              <option value="energetika">Energetika</option>
+          </select>
+          </div>
+          <div className="add-project-documents">
+            <label className="button-in-wrapper">
+              Naloži dokumente
+              <input type="file" className="project-documents" hidden />
+           </label>
+          </div>
+
+        </div>
+        <div className="add-project-footer">
+          <button className="button-in-wrapper">Dodaj</button>
+        </div>
+      </div>
+      </div>
   );
 };
 
