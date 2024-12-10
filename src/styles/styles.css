@@ -9,7 +9,7 @@ nav.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 15px;
   margin-bottom: 10px;
   background-color: #c42c3c;
   color: white;
@@ -50,6 +50,13 @@ nav.navbar {
 .sign-out:hover {
   color: #e1fddfe1;
 }
+a.sign-out{
+  text-decoration: none; /* Removes the underline */
+  color: inherit; /* Keeps the text color or customize it */
+  cursor: pointer; /* Makes it look like a button */
+   outline: none; /* Removes the focus outline */
+}
+
 /* Box Style*/
 .window-box {
   background-color: #f0f0f0b7; 
@@ -200,11 +207,9 @@ border-radius: 5px;
   display: none; /* Skrij privzeti input */
 }
 
-
-
 @media (max-width: 768px) {
   .right-menu {
-      font-size: 14px;
+      font-size: 14px;  
   }
 }
 

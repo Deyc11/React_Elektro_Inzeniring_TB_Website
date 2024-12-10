@@ -1,12 +1,13 @@
 import React from 'react';
+import '../styles/odjava.css'
 
-const Odjava = () => {
-    return (
-      <div>
-        <ControlPanel />
-      </div>
-    );
-  };
-  
-  export default Odjava;
+const OdjavaPage = () => {
+  return (
+    <div className="odjava-page">
+      <h1>Odjavljeni Ste</h1>
+    </div>
+  );
+};
+
+export default OdjavaPage;
   

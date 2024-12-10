@@ -13,7 +13,9 @@ const Navbar = () => {
       <div className="right-menu">
         <span>
           Dobrodošli, <strong>[Ime Uporabnika]</strong>
-          <a href="signout_link" className="sign-out">Odjava</a>
+          <Link to="/odjava">
+          <button className="button-in-wrapper">Odjava</button>
+          </Link>
         </span>
       </div>
     </nav>

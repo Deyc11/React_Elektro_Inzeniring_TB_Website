@@ -1,0 +1,23 @@
+/*Odjava page css*/
+.odjava-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Višina čez celotno okno brskalnika */
+    background-color: #f8f9fa; /* Svetlo ozadje */
+    color: #c42c3c; /* Barva teksta */
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .odjava-page h1 {
+    font-size: 3rem; /* Velikost za velike zaslone */
+  }
+  
+  @media (max-width: 768px) {
+    .odjava-page h1 {
+      font-size: 2rem; /* Manjša velikost za manjše zaslone */
+    }
+  }
+  /*Odjava page css end*/
