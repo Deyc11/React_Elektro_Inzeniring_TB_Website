@@ -1,0 +1,94 @@
+/* Osnovna struktura strani */
+.project-page-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Naslov strani */
+  .project-page-title {
+    text-align: center;
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Wrapper za seznam projektov */
+  .project-list-wrapper {
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Seznam projektov */
+  .project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .project-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .project-info {
+    flex: 1;
+  }
+  .project-item:last-child {
+    border-bottom: none;
+  }
+  
+  .project-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Ime projekta */
+  .project-name {
+    font-size: 1.5rem;
+    color: #c42c3c;
+    margin: 0 0 10px;
+  }
+  
+  /* Detajli projekta */
+  .project-details {
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  .project-label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Prazno stanje */
+  .no-projects {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+  }
+
+  .delete-button {
+    background: none;
+    border: none;
+    color: #c42c3c;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    margin-left: 10px;
+  }
+
+  .delete-button:hover {
+    color: #a3222f;
+  }
+  
