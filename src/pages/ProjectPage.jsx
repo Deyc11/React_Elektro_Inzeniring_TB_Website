@@ -48,6 +48,10 @@ const ProjectPage = () => {
     const updatedFiles = { ...fileUploads };
     updatedFiles[projectIndex] = updatedFiles[projectIndex].filter((_, i) => i !== fileIndex);
 
+    if (updatedFiles[projectIndex].length === 0) {
+      delete updatedFiles[projectIndex];
+    }
+
     setFileUploads(updatedFiles);
     localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
   };
@@ -73,9 +77,9 @@ const ProjectPage = () => {
                 </div>
                 <div className="project-actions">
                   {/* Prikaz naloženih datotek */}
-                  {fileUploads[index] && (
+                  {fileUploads[index] && fileUploads[index].length > 0 && (
                     <div className="uploaded-files">
-                      <h4>Naložene datoteke:</h4>
+                      <h5>Dokumenti</h5>
                       <ul>
                         {fileUploads[index].map((file, fileIndex) => (
                           <li key={fileIndex}>
