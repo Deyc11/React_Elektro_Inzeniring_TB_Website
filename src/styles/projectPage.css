@@ -105,5 +105,63 @@
     border-radius: 5px;
     font-size: 1rem;
   }
+
+  /*Dodajanje projektov*/
+  .project-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .upload-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4caf50;
+    transition: color 0.3s;
+  }
+  
+  .upload-icon:hover {
+    color: #388e3c;
+  }
+  
+  .uploaded-files {
+    margin-top: 10px;
+  }
+  
+  .uploaded-files ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .uploaded-files li {
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .uploaded-files a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .uploaded-files a:hover {
+    text-decoration: underline;
+  }
+
+  /*ikona za odstranjevanje datotek*/
+  .delete-file-button {
+    background: none;
+    border: none;
+    font-size: 0.8rem; /* Manjša velikost */
+    color: rgba(0, 0, 0, 0.6); /* Črna z nekaj transparentnosti */
+    cursor: pointer;
+    margin-left: 10px; /* Prostor med imenom datoteke in gumbom */
+    transition: color 0.2s;
+  }
+  
+  .delete-file-button:hover {
+    color: rgba(0, 0, 0, 0.9); /* Temnejša ob hoverju */
+  }
+  
   
   

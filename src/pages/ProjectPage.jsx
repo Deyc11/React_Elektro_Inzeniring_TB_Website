@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import "../styles/projectPage.css";
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
-  const [filterType, setFilterType] = useState("vse");
-  const location = useLocation(); // Pridobimo URL parametre
+  const [fileUploads, setFileUploads] = useState({}); // Spremljanje datotek za projekte
 
   useEffect(() => {
     const savedProjects = localStorage.getItem("projects");
@@ -13,43 +11,52 @@ const ProjectPage = () => {
       setProjects(JSON.parse(savedProjects));
     }
 
-    // Preberi filter iz URL parametrov
-    const params = new URLSearchParams(location.search);
-    const filter = params.get("filter");
-    if (filter) {
-      setFilterType(filter);
+    const savedFiles = localStorage.getItem("fileUploads");
+    if (savedFiles) {
+      setFileUploads(JSON.parse(savedFiles));
     }
-  }, [location]);
+  }, []);
 
   const handleDeleteProject = (index) => {
     const updatedProjects = projects.filter((_, i) => i !== index);
     setProjects(updatedProjects);
-    localStorage.setItem("projects", JSON.stringify(updatedProjects)); // Posodobitev localStorage
+
+    const updatedFiles = { ...fileUploads };
+    delete updatedFiles[index];
+    setFileUploads(updatedFiles);
+
+    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
   };
 
-  const filteredProjects =
-    filterType === "vse"
-      ? projects
-      : projects.filter((project) => project.type === filterType);
+  const handleFileUpload = (event, index) => {
+    const files = Array.from(event.target.files).map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file), // Ustvari URL za prenos datoteke
+    }));
+
+    const updatedFiles = {
+      ...fileUploads,
+      [index]: [...(fileUploads[index] || []), ...files],
+    };
+
+    setFileUploads(updatedFiles);
+    localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
+  };
+
+  const handleDeleteFile = (projectIndex, fileIndex) => {
+    const updatedFiles = { ...fileUploads };
+    updatedFiles[projectIndex] = updatedFiles[projectIndex].filter((_, i) => i !== fileIndex);
+
+    setFileUploads(updatedFiles);
+    localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
+  };
+
+  const filteredProjects = projects;
 
   return (
     <div className="project-page-container">
       <h1 className="project-page-title">Seznam Projektov</h1>
-      {/* Dropdown meni za filtriranje */}
-      <div className="filter-container">
-        <label htmlFor="filter">Filtriraj po tipu: </label>
-        <select
-          id="filter"
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value)}
-          className="filter-select"
-        >
-          <option value="vse">Vse</option>
-          <option value="meritve">Meritve</option>
-          <option value="elektro_projekt">Elektro projekt</option>
-          <option value="energetika">Energetika</option>
-        </select>
-      </div>
       <div className="project-list-wrapper">
         {filteredProjects.length > 0 ? (
           <ul className="project-list">
@@ -64,17 +71,52 @@ const ProjectPage = () => {
                     <span className="project-label">Lokacija:</span> {project.location}
                   </p>
                 </div>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteProject(index)}
-                >
-                  🗑️
-                </button>
+                <div className="project-actions">
+                  {/* Prikaz naloženih datotek */}
+                  {fileUploads[index] && (
+                    <div className="uploaded-files">
+                      <h4>Naložene datoteke:</h4>
+                      <ul>
+                        {fileUploads[index].map((file, fileIndex) => (
+                          <li key={fileIndex}>
+                            <a href={file.url} download={file.name}>
+                              {file.name}
+                            </a>
+                            <button
+                              className="delete-file-button"
+                              onClick={() => handleDeleteFile(index, fileIndex)}
+                            >
+                              ❌
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {/* Ikona za nalaganje datotek */}
+                  <label className="upload-icon" htmlFor={`file-upload-${index}`}>
+                    📁
+                  </label>
+                  <input
+                    type="file"
+                    id={`file-upload-${index}`}
+                    multiple
+                    style={{ display: "none" }}
+                    onChange={(e) => handleFileUpload(e, index)}
+                  />
+                  {/* Ikona za brisanje */}
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteProject(index)}
+                  >
+                    🗑️
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="no-projects">Ni projektov za izbrani tip.</p>
+          <p className="no-projects">Trenutno ni projektov za prikaz.</p>
         )}
       </div>
     </div>
