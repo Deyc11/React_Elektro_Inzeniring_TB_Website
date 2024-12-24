@@ -69,7 +69,7 @@ const ProjectList = ({ hideList }) => {
               onChange={(e) => setNewProject({ ...newProject, type: e.target.value })}
             >
               <option value="" disabled>
-                Izberite vrsto projekta
+                Vrsta Projekta
               </option>
               <option value="meritve">Meritve</option>
               <option value="elektro_projekt">Elektro projekt</option>

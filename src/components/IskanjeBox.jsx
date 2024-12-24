@@ -36,7 +36,7 @@ const IskanjeBox = () => {
   return (
     <div className="col-md-4 mb-4">
       <div className="window-box p-4 shadow-sm" style={{ position: "relative" }}>
-        <h3>Iskanje po projektih</h3>
+        <h3>Iskanje Projektov</h3>
         <input
           type="text"
           className="form-control search-input"

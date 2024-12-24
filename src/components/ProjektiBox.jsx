@@ -11,7 +11,7 @@ const ProjektiBox = () => {
             <li className="list-group-item">Meritve</li>
           </Link>
           <Link to="/projekti?filter=elektro_projekt" style={{ textDecoration: "none", color: "inherit" }}>
-            <li className="list-group-item">Elektro projekti</li>
+            <li className="list-group-item">Elektro Projekti</li>
           </Link>
           <Link to="/projekti?filter=energetika" style={{ textDecoration: "none", color: "inherit" }}>
             <li className="list-group-item">Energetika</li>
