@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // For navigation to filtered project
+import { useNavigate } from "react-router-dom";
 
 const IskanjeBox = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,7 +17,7 @@ const IskanjeBox = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    if (query === "") {
+    if (query.trim() === "") {
       setFilteredProjects([]); // Clear suggestions if query is empty
     } else {
       const lowercasedQuery = query.toLowerCase();
@@ -35,27 +35,27 @@ const IskanjeBox = () => {
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="window-box p-4 shadow-sm">
+      <div className="window-box p-4 shadow-sm" style={{ position: "relative" }}>
         <h3>Iskanje po projektih</h3>
         <input
           type="text"
-          className="form-control"
+          className="form-control search-input"
           placeholder="Vnesite ime projekta..."
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
         />
         {filteredProjects.length > 0 && (
-          <ul className="search-results">
+          <div className="dropdown-menu-custom">
             {filteredProjects.map((project, index) => (
-              <li
+              <div
                 key={index}
+                className="dropdown-item-custom"
                 onClick={() => handleProjectClick(project.name)}
-                style={{ cursor: "pointer" }}
               >
                 {project.name}
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

@@ -210,6 +210,31 @@ border-radius: 5px;
 .project-documents {
   display: none; /* Skrij privzeti input */
 }
+/* Dropdown menu for search results */
+.dropdown-menu-custom {
+  position: absolute;
+  top: calc(100% + 5px); /* Prikaže se tik pod iskalnim poljem */
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item-custom {
+  padding: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #f5f5f5;
+}
 
 @media (max-width: 768px) {
   .right-menu {

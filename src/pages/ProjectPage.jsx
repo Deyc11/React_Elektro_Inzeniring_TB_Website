@@ -1,21 +1,36 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "../styles/projectPage.css";
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [fileUploads, setFileUploads] = useState({}); // Spremljanje datotek za projekte
+  const location = useLocation();
 
   useEffect(() => {
     const savedProjects = localStorage.getItem("projects");
     if (savedProjects) {
-      setProjects(JSON.parse(savedProjects));
+      const parsedProjects = JSON.parse(savedProjects);
+      setProjects(parsedProjects);
+
+      const params = new URLSearchParams(location.search);
+      const filter = params.get("filter");
+      if (filter) {
+        const filtered = parsedProjects.filter(
+          (project) => project.name === filter
+        );
+        setFilteredProjects(filtered);
+      } else {
+        setFilteredProjects(parsedProjects);
+      }
     }
 
     const savedFiles = localStorage.getItem("fileUploads");
     if (savedFiles) {
       setFileUploads(JSON.parse(savedFiles));
     }
-  }, []);
+  }, [location]);
 
   const handleDeleteProject = (index) => {
     const updatedProjects = projects.filter((_, i) => i !== index);
@@ -55,8 +70,6 @@ const ProjectPage = () => {
     setFileUploads(updatedFiles);
     localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
   };
-
-  const filteredProjects = projects;
 
   return (
     <div className="project-page-container">
