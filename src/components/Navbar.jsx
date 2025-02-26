@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="left-menu">
-        <Link to="/"> {/* Navigacija na domačo stran */}
+        <Link to="/"> {}
           <i className="fas fa-home home-icon"></i>
         </Link>
       </div>

@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "../styles/koledar.css";
 
-const ProjectList = ({ hideList }) => {
-  const [projects, setProjects] = useState(() => {
+const ProjectList = ({ hideList }) => {                         // po default je hidden
+  const [projects, setProjects] = useState(() => {              // Inicializacija projektov iz localStorage, iz JSON v JavaScript objekt
     const savedProjects = localStorage.getItem("projects");
     return savedProjects ? JSON.parse(savedProjects) : [];
   });
 
-  const [newProject, setNewProject] = useState({ name: "", type: "", location: "" });
+  const [newProject, setNewProject] = useState({ name: "", type: "", location: "" }); // Save za nove projekte
   const [isAddProjectActive, setIsAddProjectActive] = useState(false);
 
   const toggleAddProject = () => {
     setIsAddProjectActive((prevState) => !prevState);
   };
 
+  // Check za polja, dodajanje novega projekta v projects sezna, update za localStorage, Clear and Close obrazec.
   const handleAddProject = () => {
     if (!newProject.name || !newProject.type || !newProject.location) {
       alert("Prosim, izpolnite vsa polja.");

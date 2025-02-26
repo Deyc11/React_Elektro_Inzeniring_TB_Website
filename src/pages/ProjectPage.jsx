@@ -3,18 +3,18 @@ import { useLocation } from "react-router-dom";
 import "../styles/projectPage.css";
 
 const ProjectPage = () => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState([]); // projects vsebuje vse projekte pridobljene iz LocalStorage
   const [filteredProjects, setFilteredProjects] = useState([]);
-  const [fileUploads, setFileUploads] = useState({}); // Spremljanje datotek za projekte
+  const [fileUploads, setFileUploads] = useState({}); // Spremljanje/hranjenje datotek za projekte
   const location = useLocation();
 
   useEffect(() => {
-    const savedProjects = localStorage.getItem("projects");
+    const savedProjects = localStorage.getItem("projects"); // pridobivanje projektov iz localStorage
     if (savedProjects) {
       const parsedProjects = JSON.parse(savedProjects);
       setProjects(parsedProjects);
 
-      const params = new URLSearchParams(location.search);
+      const params = new URLSearchParams(location.search); // check za URL filter in sama funkcija
       const filter = params.get("filter");
       if (filter) {
         const filtered = parsedProjects.filter(
@@ -31,7 +31,7 @@ const ProjectPage = () => {
       setFileUploads(JSON.parse(savedFiles));
     }
   }, [location]);
-
+  // Odstranjevanje iz projects
   const handleDeleteProject = (index) => {
     const updatedProjects = projects.filter((_, i) => i !== index);
     setProjects(updatedProjects);
@@ -40,10 +40,12 @@ const ProjectPage = () => {
     delete updatedFiles[index];
     setFileUploads(updatedFiles);
 
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    //PosodobitevLocalStorage
+    localStorage.setItem("projects", JSON.stringify(updatedProjects)); 
     localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
   };
 
+  //Dodajanje datotek
   const handleFileUpload = (event, index) => {
     const files = Array.from(event.target.files).map((file) => ({
       name: file.name,
