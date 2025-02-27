@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { db } from "../firebase"; // Firebase Firestore
+import { collection, getDocs } from "firebase/firestore";
 
 const IskanjeBox = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -7,21 +9,31 @@ const IskanjeBox = () => {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const navigate = useNavigate();
 
-  // Use effect se izvede samo enkrat
+  // 🔥 Naloži projekte iz Firestore
   useEffect(() => {
-    const savedProjects = localStorage.getItem("projects");
-    if (savedProjects) {                                    // Preverimo če so kakšni projekti v localstorage
-      const parsedProjects = JSON.parse(savedProjects); // Pretvorba JSON v JavaScript Objekt shranjeno v savedProjects
-      setProjects(parsedProjects);
-    }
+    const fetchProjects = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "projects"));
+        const projectList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProjects(projectList);
+      } catch (error) {
+        console.error("Napaka pri nalaganju projektov:", error);
+      }
+    };
+
+    fetchProjects();
   }, []);
 
+  // 🔍 Iskanje projektov po imenu
   const handleSearch = (query) => {
     setSearchQuery(query);
     if (query.trim() === "") {
-      setFilteredProjects([]); // Clear suggestions če je query empty
+      setFilteredProjects([]); // Počisti predloge, če ni vnosa
     } else {
-      const lowercasedQuery = query.toLowerCase(); // Lower case da je iskanje neobčutljivo
+      const lowercasedQuery = query.toLowerCase();
       setFilteredProjects(
         projects.filter((project) =>
           project.name.toLowerCase().includes(lowercasedQuery)
@@ -30,9 +42,9 @@ const IskanjeBox = () => {
     }
   };
 
-  // Ob kliku na projekt preusmeritev na /projekti?filter=ime_projekta
+  // 📌 Preusmeritev na /projekti?filter=ime_projekta
   const handleProjectClick = (projectName) => {
-    navigate(`/projekti?filter=${encodeURIComponent(projectName)}`); // Brez težav s posebnimi znaki
+    navigate(`/projekti?filter=${encodeURIComponent(projectName)}`);
   };
 
   return (
@@ -45,12 +57,12 @@ const IskanjeBox = () => {
           placeholder="Vnesite ime projekta..."
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
-        /> 
+        />
         {filteredProjects.length > 0 && (
           <div className="dropdown-menu-custom">
-            {filteredProjects.map((project, index) => (
+            {filteredProjects.map((project) => (
               <div
-                key={index}
+                key={project.id}
                 className="dropdown-item-custom"
                 onClick={() => handleProjectClick(project.name)}
               >

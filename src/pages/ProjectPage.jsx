@@ -1,76 +1,94 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { db, storage } from "../firebase"; // Firebase Firestore & Storage
+import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import "../styles/projectPage.css";
 
 const ProjectPage = () => {
-  const [projects, setProjects] = useState([]); // projects vsebuje vse projekte pridobljene iz LocalStorage
+  const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
-  const [fileUploads, setFileUploads] = useState({}); // Spremljanje/hranjenje datotek za projekte
   const location = useLocation();
 
+  // 🔥 Naloži projekte iz Firestore
   useEffect(() => {
-    const savedProjects = localStorage.getItem("projects"); // pridobivanje projektov iz localStorage
-    if (savedProjects) {
-      const parsedProjects = JSON.parse(savedProjects);
-      setProjects(parsedProjects);
+    const fetchProjects = async () => {
+      const querySnapshot = await getDocs(collection(db, "projects"));
+      const projectList = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProjects(projectList);
 
-      const params = new URLSearchParams(location.search); // check za URL filter in sama funkcija
+      // Če je v URL-ju filter, uporabimo filtriranje
+      const params = new URLSearchParams(location.search);
       const filter = params.get("filter");
       if (filter) {
-        const filtered = parsedProjects.filter(
-          (project) => project.name === filter
-        );
-        setFilteredProjects(filtered);
+        setFilteredProjects(projectList.filter((project) => project.name === filter));
       } else {
-        setFilteredProjects(parsedProjects);
+        setFilteredProjects(projectList);
       }
-    }
-
-    const savedFiles = localStorage.getItem("fileUploads");
-    if (savedFiles) {
-      setFileUploads(JSON.parse(savedFiles));
-    }
-  }, [location]);
-  // Odstranjevanje iz projects
-  const handleDeleteProject = (index) => {
-    const updatedProjects = projects.filter((_, i) => i !== index);
-    setProjects(updatedProjects);
-
-    const updatedFiles = { ...fileUploads };
-    delete updatedFiles[index];
-    setFileUploads(updatedFiles);
-
-    //PosodobitevLocalStorage
-    localStorage.setItem("projects", JSON.stringify(updatedProjects)); 
-    localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
-  };
-
-  //Dodajanje datotek
-  const handleFileUpload = (event, index) => {
-    const files = Array.from(event.target.files).map((file) => ({
-      name: file.name,
-      url: URL.createObjectURL(file), // Ustvari URL za prenos datoteke
-    }));
-
-    const updatedFiles = {
-      ...fileUploads,
-      [index]: [...(fileUploads[index] || []), ...files],
     };
 
-    setFileUploads(updatedFiles);
-    localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
+    fetchProjects();
+  }, [location]);
+
+  // 🔥 Brisanje projekta iz Firestore
+  const handleDeleteProject = async (projectId) => {
+    try {
+      await deleteDoc(doc(db, "projects", projectId));
+      setProjects(projects.filter((project) => project.id !== projectId));
+    } catch (error) {
+      console.error("Napaka pri brisanju projekta:", error);
+    }
   };
 
-  const handleDeleteFile = (projectIndex, fileIndex) => {
-    const updatedFiles = { ...fileUploads };
-    updatedFiles[projectIndex] = updatedFiles[projectIndex].filter((_, i) => i !== fileIndex);
+  // 🔥 Funkcija za nalaganje datotek v Firebase Storage
+  const handleFileUpload = async (event, projectId) => {
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
 
-    if (updatedFiles[projectIndex].length === 0) {
-      delete updatedFiles[projectIndex];
+    for (let file of files) {
+      const storageRef = ref(storage, `projects/${projectId}/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => console.error("Napaka pri nalaganju:", error),
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          // 🔥 Posodobi projekt v Firestore z novim URL-jem datoteke
+          const projectRef = doc(db, "projects", projectId);
+          const project = projects.find(p => p.id === projectId);
+          const updatedFiles = [...(project.files || []), { name: file.name, url: downloadURL }];
+          
+          await updateDoc(projectRef, { files: updatedFiles });
+
+          // Osveži prikaz
+          setProjects(projects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p));
+        }
+      );
     }
+  };
 
-    setFileUploads(updatedFiles);
-    localStorage.setItem("fileUploads", JSON.stringify(updatedFiles));
+  // 🔥 Brisanje datoteke iz Firebase Storage in Firestore
+  const handleDeleteFile = async (projectId, fileName) => {
+    try {
+      const fileRef = ref(storage, `projects/${projectId}/${fileName}`);
+      await deleteObject(fileRef);
+
+      const projectRef = doc(db, "projects", projectId);
+      const project = projects.find(p => p.id === projectId);
+      const updatedFiles = project.files.filter((file) => file.name !== fileName);
+      
+      await updateDoc(projectRef, { files: updatedFiles });
+
+      setProjects(projects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p));
+    } catch (error) {
+      console.error("Napaka pri brisanju datoteke:", error);
+    }
   };
 
   return (
@@ -79,8 +97,8 @@ const ProjectPage = () => {
       <div className="project-list-wrapper">
         {filteredProjects.length > 0 ? (
           <ul className="project-list">
-            {filteredProjects.map((project, index) => (
-              <li className="project-item" key={index}>
+            {filteredProjects.map((project) => (
+              <li className="project-item" key={project.id}>
                 <div className="project-info">
                   <h3 className="project-name">{project.name}</h3>
                   <p className="project-details">
@@ -92,18 +110,18 @@ const ProjectPage = () => {
                 </div>
                 <div className="project-actions">
                   {/* Prikaz naloženih datotek */}
-                  {fileUploads[index] && fileUploads[index].length > 0 && (
+                  {project.files && project.files.length > 0 && (
                     <div className="uploaded-files">
                       <h5>Dokumenti</h5>
                       <ul>
-                        {fileUploads[index].map((file, fileIndex) => (
-                          <li key={fileIndex}>
+                        {project.files.map((file, index) => (
+                          <li key={index}>
                             <a href={file.url} download={file.name}>
                               {file.name}
                             </a>
                             <button
                               className="delete-file-button"
-                              onClick={() => handleDeleteFile(index, fileIndex)}
+                              onClick={() => handleDeleteFile(project.id, file.name)}
                             >
                               ❌
                             </button>
@@ -113,20 +131,20 @@ const ProjectPage = () => {
                     </div>
                   )}
                   {/* Ikona za nalaganje datotek */}
-                  <label className="upload-icon" htmlFor={`file-upload-${index}`}>
+                  <label className="upload-icon" htmlFor={`file-upload-${project.id}`}>
                     📁
                   </label>
                   <input
                     type="file"
-                    id={`file-upload-${index}`}
+                    id={`file-upload-${project.id}`}
                     multiple
                     style={{ display: "none" }}
-                    onChange={(e) => handleFileUpload(e, index)}
+                    onChange={(e) => handleFileUpload(e, project.id)}
                   />
                   {/* Ikona za brisanje */}
                   <button
                     className="delete-button"
-                    onClick={() => handleDeleteProject(index)}
+                    onClick={() => handleDeleteProject(project.id)}
                   >
                     🗑️
                   </button>
