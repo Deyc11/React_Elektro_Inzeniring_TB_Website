@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { db, storage } from "../firebase"; // Firebase Firestore & Storage
+import { db, storage } from "../firebase";
 import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import "../styles/projectPage.css";
@@ -10,42 +10,60 @@ const ProjectPage = () => {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const location = useLocation();
 
-  // 🔥 Naloži projekte iz Firestore
+  // 🔥 1. Pridobi projekte iz Firestore
   useEffect(() => {
     const fetchProjects = async () => {
-      const querySnapshot = await getDocs(collection(db, "projects"));
-      const projectList = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProjects(projectList);
-
-      // Če je v URL-ju filter, uporabimo filtriranje
-      const params = new URLSearchParams(location.search);
-      const filter = params.get("filter");
-      if (filter) {
-        setFilteredProjects(
-          projectList.filter((project) => project.type.toLowerCase() === filter.toLowerCase())
-      );      
-      } else {
-        setFilteredProjects(projectList);
+      try {
+        const querySnapshot = await getDocs(collection(db, "projects"));
+        const projectList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProjects(projectList);
+      } catch (error) {
+        console.error("Napaka pri nalaganju projektov:", error);
       }
     };
 
     fetchProjects();
-  }, [location]);
+  }, []);
 
-  // 🔥 Brisanje projekta iz Firestore
+  // 🔍 2. Filtriranje projektov glede na URL parameter `filter`
+  useEffect(() => {
+    if (projects.length === 0) return;
+
+    const params = new URLSearchParams(location.search);
+    const filterValue = params.get("filter");
+
+    if (filterValue) {
+      // ✅ Najprej poskusimo najti projekt po imenu
+      const foundProject = projects.find((project) => project.name.toLowerCase() === filterValue.toLowerCase());
+
+      if (foundProject) {
+        setFilteredProjects([foundProject]); // Prikaz samo enega projekta
+      } else {
+        // Če ni projekta s tem imenom, filtriramo po tipu
+        setFilteredProjects(
+          projects.filter((project) => project.type.toLowerCase() === filterValue.toLowerCase())
+        );
+      }
+    } else {
+      setFilteredProjects(projects); // Če ni filtra, prikažemo vse projekte
+    }
+  }, [location, projects]);
+
+  // 🔥 3. Brisanje projekta iz Firestore
   const handleDeleteProject = async (projectId) => {
     try {
       await deleteDoc(doc(db, "projects", projectId));
-      setProjects(projects.filter((project) => project.id !== projectId));
+      setProjects((prevProjects) => prevProjects.filter((project) => project.id !== projectId));
+      setFilteredProjects((prevFiltered) => prevFiltered.filter((project) => project.id !== projectId));
     } catch (error) {
       console.error("Napaka pri brisanju projekta:", error);
     }
   };
 
-  // 🔥 Funkcija za nalaganje datotek v Firebase Storage
+  // 🔥 4. Funkcija za nalaganje datotek v Firebase Storage
   const handleFileUpload = async (event, projectId) => {
     const files = Array.from(event.target.files);
     if (files.length === 0) return;
@@ -65,17 +83,22 @@ const ProjectPage = () => {
           const projectRef = doc(db, "projects", projectId);
           const project = projects.find(p => p.id === projectId);
           const updatedFiles = [...(project.files || []), { name: file.name, url: downloadURL }];
-          
+
           await updateDoc(projectRef, { files: updatedFiles });
 
           // Osveži prikaz
-          setProjects(projects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p));
+          setProjects((prevProjects) =>
+            prevProjects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
+          );
+          setFilteredProjects((prevFiltered) =>
+            prevFiltered.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
+          );
         }
       );
     }
   };
 
-  // 🔥 Brisanje datoteke iz Firebase Storage in Firestore
+  // 🔥 5. Brisanje datoteke iz Firebase Storage in Firestore
   const handleDeleteFile = async (projectId, fileName) => {
     try {
       const fileRef = ref(storage, `projects/${projectId}/${fileName}`);
@@ -84,10 +107,15 @@ const ProjectPage = () => {
       const projectRef = doc(db, "projects", projectId);
       const project = projects.find(p => p.id === projectId);
       const updatedFiles = project.files.filter((file) => file.name !== fileName);
-      
+
       await updateDoc(projectRef, { files: updatedFiles });
 
-      setProjects(projects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p));
+      setProjects((prevProjects) =>
+        prevProjects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
+      );
+      setFilteredProjects((prevFiltered) =>
+        prevFiltered.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
+      );
     } catch (error) {
       console.error("Napaka pri brisanju datoteke:", error);
     }
@@ -155,7 +183,7 @@ const ProjectPage = () => {
             ))}
           </ul>
         ) : (
-          <p className="no-projects">Trenutno ni projektov za prikaz.</p>
+          <p className="no-projects">Ni rezultatov za ta filter.</p>
         )}
       </div>
     </div>
