@@ -24,7 +24,9 @@ const ProjectPage = () => {
       const params = new URLSearchParams(location.search);
       const filter = params.get("filter");
       if (filter) {
-        setFilteredProjects(projectList.filter((project) => project.name === filter));
+        setFilteredProjects(
+          projectList.filter((project) => project.type.toLowerCase() === filter.toLowerCase())
+      );      
       } else {
         setFilteredProjects(projectList);
       }
