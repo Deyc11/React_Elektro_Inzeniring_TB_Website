@@ -122,7 +122,7 @@ const ProjectPage = () => {
                   <p className="project-details"><span className="project-label">Tip:</span> {project.type}</p>
                   <p className="project-details"><span className="project-label">Lokacija:</span> {project.location}</p>
                 </div>
-                <div className="project-actions">
+                <div className="project-actions static-icons">
                   <label className="upload-icon" htmlFor={`file-upload-${project.id}`}>📁</label>
                   <input
                     type="file"
@@ -132,14 +132,18 @@ const ProjectPage = () => {
                     onChange={(e) => handleFileUpload(e, project.id)}
                   />
                   <button className="download-button" onClick={() => fetchFiles(project.id)}>📥</button>
+                  <button className="delete-button" onClick={() => handleDeleteProject(project.id)}>🗑️</button>
+                </div>
+                <div className="file-list">
                   {files[project.id]?.map((file) => (
-                    <div key={file.name}>
-                      <span>{file.name}</span>
-                      <button onClick={() => handleDownloadFile(project.id, file.name)}>⬇️</button>
-                      <button onClick={() => handleDeleteFile(project.id, file.name)}>❌</button>
+                    <div key={file.name} className="file-item">
+                      <span title={file.name}>{file.name}</span>
+                      <div className="file-actions">
+                        <button onClick={() => handleDownloadFile(project.id, file.name)}>⬇️</button>
+                        <button onClick={() => handleDeleteFile(project.id, file.name)}>❌</button>
+                      </div>
                     </div>
                   ))}
-                  <button className="delete-button" onClick={() => handleDeleteProject(project.id)}>🗑️</button>
                 </div>
               </li>
             ))}

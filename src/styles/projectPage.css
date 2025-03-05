@@ -1,167 +1,207 @@
 /* Osnovna struktura strani */
 .project-page-container {
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-    font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Naslov strani */
-  .project-page-title {
-    text-align: center;
-    color: #333;
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  
-  /* Wrapper za seznam projektov */
-  .project-list-wrapper {
-    padding: 10px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Seznam projektov */
-  .project-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .project-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-    padding: 15px 10px;
-    transition: background-color 0.3s;
-  }
-  
-  .project-info {
-    flex: 1;
-  }
-  .project-item:last-child {
-    border-bottom: none;
-  }
-  
-  .project-item:hover {
-    background-color: #f5f5f5;
-  }
-  
-  /* Ime projekta */
-  .project-name {
-    font-size: 1.5rem;
-    color: #c42c3c;
-    margin: 0 0 10px;
-  }
-  
-  /* Detajli projekta */
-  .project-details {
-    font-size: 1rem;
-    color: #555;
-    margin: 5px 0;
-  }
-  
-  .project-label {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  /* Prazno stanje */
-  .no-projects {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #888;
-  }
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  .delete-button {
-    background: none;
-    border: none;
-    color: #c42c3c;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: color 0.3s;
-    margin-left: 10px;
-  }
+/* Naslov strani */
+.project-page-title {
+  text-align: center;
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
 
-  .delete-button:hover {
-    color: #a3222f;
-  }
+/* Wrapper za seznam projektov */
+.project-list-wrapper {
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  .filter-container {
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .filter-select {
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
+/* Seznam projektov */
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* Ensures vertical stacking */
+  gap: 12px;
+}
 
-  /*Dodajanje projektov*/
-  .project-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  
-  .upload-icon {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #4caf50;
-    transition: color 0.3s;
-  }
-  
-  .upload-icon:hover {
-    color: #388e3c;
-  }
-  
-  .uploaded-files {
-    margin-top: 10px;
-  }
-  
-  .uploaded-files ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .uploaded-files li {
-    font-size: 0.9rem;
-    color: #555;
-  }
+.project-item {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start;
+  border-bottom: 1px solid #ddd;
+  padding: 15px 10px;
+  transition: background-color 0.3s;
+  gap: 5px;
+}
 
-  .uploaded-files a {
-    text-decoration: none;
-    color: #007bff;
-  }
-  
-  .uploaded-files a:hover {
-    text-decoration: underline;
-  }
+.project-info {
+  flex: 1;
+}
+.project-item:last-child {
+  border-bottom: none;
+}
 
-  /*ikona za odstranjevanje datotek*/
-  .delete-file-button {
-    background: none;
-    border: none;
-    font-size: 0.8rem; /* Manjša velikost */
-    color: rgba(0, 0, 0, 0.6); /* Črna z nekaj transparentnosti */
-    cursor: pointer;
-    margin-left: 10px; /* Prostor med imenom datoteke in gumbom */
-    transition: color 0.2s;
-  }
-  
-  .delete-file-button:hover {
-    color: rgba(0, 0, 0, 0.9); /* Temnejša ob hoverju */
-  }
-  
-  
-  
+.project-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Ime projekta */
+.project-name {
+  font-size: 1.5rem;
+  color: #c42c3c;
+  margin: 0 0 10px;
+}
+
+/* Detajli projekta */
+.project-details {
+  font-size: 1rem;
+  color: #555;
+  margin: 5px 0;
+}
+
+.project-label {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Prazno stanje */
+.no-projects {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: #c42c3c;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin-left: 10px;
+}
+
+.delete-button:hover {
+  color: #a3222f;
+}
+
+.filter-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-select {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Dodajanje projektov */
+.project-actions {
+  display: flex;
+  flex-wrap: wrap; /* Ensures buttons don’t break the layout */
+  gap: 10px;
+  align-items: center;
+}
+
+.upload-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #4caf50;
+  transition: color 0.3s;
+}
+
+.upload-icon:hover {
+  color: #388e3c;
+}
+
+.uploaded-files {
+  margin-top: 10px;
+}
+
+.uploaded-files ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.uploaded-files li {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.uploaded-files a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.uploaded-files a:hover {
+  text-decoration: underline;
+}
+
+/* Ikona za odstranjevanje datotek */
+.delete-file-button {
+  background: none;
+  border: none;
+  font-size: 0.8rem; /* Manjša velikost */
+  color: rgba(0, 0, 0, 0.6); /* Črna z nekaj transparentnosti */
+  cursor: pointer;
+  margin-left: 10px; /* Prostor med imenom datoteke in gumbom */
+  transition: color 0.2s;
+}
+
+.delete-file-button:hover {
+  color: rgba(0, 0, 0, 0.9); /* Temnejša ob hoverju */
+}
+
+/* File list display improvements */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between file icon and name */
+  max-width: 220px; /* Prevents long file names from breaking layout */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-item span {
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.static-icons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px; /* Adds spacing between icons and file list */
+}
