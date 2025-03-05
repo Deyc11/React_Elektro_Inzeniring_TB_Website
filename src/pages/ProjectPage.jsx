@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { db, storage } from "../firebase";
-import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import { db } from "../firebase";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { createClient } from "@supabase/supabase-js";
 import "../styles/projectPage.css";
+
+const supabase = createClient(
+  "https://ryqewdinehhdforcpqxy.supabase.co", 
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5cWV3ZGluZWhoZGZvcmNwcXh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExODIzODYsImV4cCI6MjA1Njc1ODM4Nn0.9VMnpK41bLCw07FrA884vYfxmZZRoGdUp1n1E_ltddg"
+);
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [files, setFiles] = useState({});
   const location = useLocation();
 
-  // 🔥 1. Pridobi projekte iz Firestore
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -21,104 +26,87 @@ const ProjectPage = () => {
         }));
         setProjects(projectList);
       } catch (error) {
-        console.error("Napaka pri nalaganju projektov:", error);
+        console.error("Error fetching projects:", error);
       }
     };
-
     fetchProjects();
   }, []);
 
-  // 🔍 2. Filtriranje projektov glede na URL parameter `filter`
   useEffect(() => {
     if (projects.length === 0) return;
-
     const params = new URLSearchParams(location.search);
     const filterValue = params.get("filter");
-
     if (filterValue) {
-      // ✅ Najprej poskusimo najti projekt po imenu
-      const foundProject = projects.find((project) => project.name.toLowerCase() === filterValue.toLowerCase());
-
+      const foundProject = projects.find(
+        (project) => project.name.toLowerCase() === filterValue.toLowerCase()
+      );
       if (foundProject) {
-        setFilteredProjects([foundProject]); // Prikaz samo enega projekta
+        setFilteredProjects([foundProject]);
       } else {
-        // Če ni projekta s tem imenom, filtriramo po tipu
         setFilteredProjects(
-          projects.filter((project) => project.type.toLowerCase() === filterValue.toLowerCase())
+          projects.filter(
+            (project) => project.type.toLowerCase() === filterValue.toLowerCase()
+          )
         );
       }
     } else {
-      setFilteredProjects(projects); // Če ni filtra, prikažemo vse projekte
+      setFilteredProjects(projects);
     }
   }, [location, projects]);
 
-  // 🔥 3. Brisanje projekta iz Firestore
   const handleDeleteProject = async (projectId) => {
     try {
       await deleteDoc(doc(db, "projects", projectId));
-      setProjects((prevProjects) => prevProjects.filter((project) => project.id !== projectId));
-      setFilteredProjects((prevFiltered) => prevFiltered.filter((project) => project.id !== projectId));
+      setProjects(prev => prev.filter(project => project.id !== projectId));
+      setFilteredProjects(prev => prev.filter(project => project.id !== projectId));
     } catch (error) {
-      console.error("Napaka pri brisanju projekta:", error);
+      console.error("Error deleting project:", error);
     }
   };
 
-  // 🔥 4. Funkcija za nalaganje datotek v Firebase Storage
   const handleFileUpload = async (event, projectId) => {
-    const files = Array.from(event.target.files);
-    if (files.length === 0) return;
-
+    const files = event.target.files;
+    if (!files.length) return;
+    
     for (let file of files) {
-      const storageRef = ref(storage, `projects/${projectId}/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        null,
-        (error) => console.error("Napaka pri nalaganju:", error),
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-          // 🔥 Posodobi projekt v Firestore z novim URL-jem datoteke
-          const projectRef = doc(db, "projects", projectId);
-          const project = projects.find(p => p.id === projectId);
-          const updatedFiles = [...(project.files || []), { name: file.name, url: downloadURL }];
-
-          await updateDoc(projectRef, { files: updatedFiles });
-
-          // Osveži prikaz
-          setProjects((prevProjects) =>
-            prevProjects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
-          );
-          setFilteredProjects((prevFiltered) =>
-            prevFiltered.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
-          );
-        }
-      );
+      const { data, error } = await supabase.storage
+        .from("project-files")
+        .upload(`${projectId}/${file.name}`, file, { upsert: true });
+      
+      if (error) {
+        console.error("Error uploading file:", error.message);
+      } else {
+        console.log("File uploaded successfully:", data.path);
+      }
     }
+    fetchFiles(projectId);
   };
 
-  // 🔥 5. Brisanje datoteke iz Firebase Storage in Firestore
-  const handleDeleteFile = async (projectId, fileName) => {
-    try {
-      const fileRef = ref(storage, `projects/${projectId}/${fileName}`);
-      await deleteObject(fileRef);
-
-      const projectRef = doc(db, "projects", projectId);
-      const project = projects.find(p => p.id === projectId);
-      const updatedFiles = project.files.filter((file) => file.name !== fileName);
-
-      await updateDoc(projectRef, { files: updatedFiles });
-
-      setProjects((prevProjects) =>
-        prevProjects.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
-      );
-      setFilteredProjects((prevFiltered) =>
-        prevFiltered.map(p => p.id === projectId ? { ...p, files: updatedFiles } : p)
-      );
-    } catch (error) {
-      console.error("Napaka pri brisanju datoteke:", error);
+  const fetchFiles = async (projectId) => {
+    const { data, error } = await supabase.storage.from("project-files").list(projectId);
+    if (error) {
+      console.error("Error fetching files:", error.message);
+      return;
     }
+    setFiles((prevFiles) => ({ ...prevFiles, [projectId]: data }));
+  };
+
+  const handleDownloadFile = async (projectId, fileName) => {
+    const { data, error } = await supabase.storage.from("project-files").getPublicUrl(`${projectId}/${fileName}`);
+    if (error) {
+      console.error("Error getting file URL:", error.message);
+      return;
+    }
+    window.open(data.publicUrl, "_blank");
+  };
+
+  const handleDeleteFile = async (projectId, fileName) => {
+    const { error } = await supabase.storage.from("project-files").remove([`${projectId}/${fileName}`]);
+    if (error) {
+      console.error("Error deleting file:", error.message);
+      return;
+    }
+    fetchFiles(projectId);
   };
 
   return (
@@ -131,39 +119,11 @@ const ProjectPage = () => {
               <li className="project-item" key={project.id}>
                 <div className="project-info">
                   <h3 className="project-name">{project.name}</h3>
-                  <p className="project-details">
-                    <span className="project-label">Tip:</span> {project.type}
-                  </p>
-                  <p className="project-details">
-                    <span className="project-label">Lokacija:</span> {project.location}
-                  </p>
+                  <p className="project-details"><span className="project-label">Tip:</span> {project.type}</p>
+                  <p className="project-details"><span className="project-label">Lokacija:</span> {project.location}</p>
                 </div>
                 <div className="project-actions">
-                  {/* Prikaz naloženih datotek */}
-                  {project.files && project.files.length > 0 && (
-                    <div className="uploaded-files">
-                      <h5>Dokumenti</h5>
-                      <ul>
-                        {project.files.map((file, index) => (
-                          <li key={index}>
-                            <a href={file.url} download={file.name}>
-                              {file.name}
-                            </a>
-                            <button
-                              className="delete-file-button"
-                              onClick={() => handleDeleteFile(project.id, file.name)}
-                            >
-                              ❌
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {/* Ikona za nalaganje datotek */}
-                  <label className="upload-icon" htmlFor={`file-upload-${project.id}`}>
-                    📁
-                  </label>
+                  <label className="upload-icon" htmlFor={`file-upload-${project.id}`}>📁</label>
                   <input
                     type="file"
                     id={`file-upload-${project.id}`}
@@ -171,13 +131,15 @@ const ProjectPage = () => {
                     style={{ display: "none" }}
                     onChange={(e) => handleFileUpload(e, project.id)}
                   />
-                  {/* Ikona za brisanje */}
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDeleteProject(project.id)}
-                  >
-                    🗑️
-                  </button>
+                  <button className="download-button" onClick={() => fetchFiles(project.id)}>📥</button>
+                  {files[project.id]?.map((file) => (
+                    <div key={file.name}>
+                      <span>{file.name}</span>
+                      <button onClick={() => handleDownloadFile(project.id, file.name)}>⬇️</button>
+                      <button onClick={() => handleDeleteFile(project.id, file.name)}>❌</button>
+                    </div>
+                  ))}
+                  <button className="delete-button" onClick={() => handleDeleteProject(project.id)}>🗑️</button>
                 </div>
               </li>
             ))}
