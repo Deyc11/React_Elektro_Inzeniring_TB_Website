@@ -54,6 +54,13 @@ const ProjectPage = () => {
     }
   }, [location, projects]);
 
+  useEffect(() => {
+    if (projects.length === 0) return;
+    projects.forEach((project) => {
+      fetchFiles(project.id);
+    });
+  }, [projects]);
+
   const handleDeleteProject = async (projectId) => {
     try {
       await deleteDoc(doc(db, "projects", projectId));
@@ -131,7 +138,6 @@ const ProjectPage = () => {
                     style={{ display: "none" }}
                     onChange={(e) => handleFileUpload(e, project.id)}
                   />
-                  <button className="download-button" onClick={() => fetchFiles(project.id)}>📥</button>
                   <button className="delete-button" onClick={() => handleDeleteProject(project.id)}>🗑️</button>
                 </div>
                 <div className="file-list">
