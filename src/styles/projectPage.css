@@ -43,6 +43,7 @@
   padding: 15px 10px;
   transition: background-color 0.3s;
   gap: 5px;
+  position: relative;
 }
 
 .project-info {
@@ -204,4 +205,74 @@
   gap: 10px;
   align-items: center;
   margin-bottom: 10px; /* Adds spacing between icons and file list */
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.edit-form input,
+.edit-form select {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border 0.3s ease;
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+  border: 1px solid #c42c3c;
+  outline: none;
+}
+
+.project-edit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #ffc107; /* Rumena barva */
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.edit-form .btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.edit-form .btn-success:hover {
+  background: #218838;
+  transform: scale(1.05);
+}
+
+.edit-form .btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.edit-form .btn-secondary:hover {
+  background: #5a6268;
+  transform: scale(1.05);
+}
+
+
+.project-edit-button:hover {
+  background: #bb646d;
+  color: black;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
 }

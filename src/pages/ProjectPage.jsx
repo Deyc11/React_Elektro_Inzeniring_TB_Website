@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { db } from "../firebase";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { createClient } from "@supabase/supabase-js";
 import "../styles/projectPage.css";
 
@@ -14,6 +14,8 @@ const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [files, setFiles] = useState({});
+  const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editedProject, setEditedProject] = useState({ name: "", type: "", location: "" });
   const location = useLocation();
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const ProjectPage = () => {
     }
   }, [location, projects]);
 
+
   useEffect(() => {
     if (projects.length === 0) return;
     projects.forEach((project) => {
@@ -61,6 +64,36 @@ const ProjectPage = () => {
     });
   }, [projects]);
 
+  //Editing
+  const handleEditClick = (project) => {
+    setEditingProjectId(project.id);
+    setEditedProject({ name: project.name, type: project.type, location: project.location });
+  };
+
+  const handleSaveChanges = async () => {
+    if (!editingProjectId) return;
+
+    try {
+        const projectRef = doc(db, "projects", editingProjectId);
+        await updateDoc(projectRef, {
+            name: editedProject.name,
+            type: editedProject.type,
+            location: editedProject.location
+        });
+
+        setProjects(prevProjects =>
+            prevProjects.map(p => p.id === editingProjectId ? { ...p, ...editedProject } : p)
+        );
+        setFilteredProjects(prevProjects =>
+            prevProjects.map(p => p.id === editingProjectId ? { ...p, ...editedProject } : p)
+        );
+
+        setEditingProjectId(null);
+    } catch (error) {
+        console.error("Error updating project:", error);
+    }
+};
+///////////////////////////////////////////////////////
   const handleDeleteProject = async (projectId) => {
     try {
       await deleteDoc(doc(db, "projects", projectId));
@@ -125,10 +158,43 @@ const ProjectPage = () => {
             {filteredProjects.map((project) => (
               <li className="project-item" key={project.id}>
                 <div className="project-info">
-                  <h3 className="project-name">{project.name}</h3>
-                  <p className="project-details"><span className="project-label">Tip:</span> {project.type}</p>
-                  <p className="project-details"><span className="project-label">Lokacija:</span> {project.location}</p>
+                  {editingProjectId === project.id ? (
+                    <div className="edit-form">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editedProject.name}
+                        onChange={(e) => setEditedProject({ ...editedProject, name: e.target.value })}
+                        placeholder="Ime projekta"
+                      />
+                      <select
+                        className="form-control"
+                        value={editedProject.type}
+                        onChange={(e) => setEditedProject({ ...editedProject, type: e.target.value })}
+                      >
+                        <option value="Meritve">Meritve</option>
+                        <option value="Elektro projekt">Elektro projekt</option>
+                        <option value="Energetika">Energetika</option>
+                      </select>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editedProject.location}
+                        onChange={(e) => setEditedProject({ ...editedProject, location: e.target.value })}
+                        placeholder="Lokacija"
+                      />
+                      <button className="btn btn-success btn-sm" onClick={handleSaveChanges}>✅ Shrani</button>
+                      <button className="btn btn-secondary btn-sm" onClick={() => setEditingProjectId(null)}>❌ Prekliči</button>
+                    </div>
+                  ) : (
+                    <>
+                      <h3 className="project-name">{project.name}</h3>
+                      <p className="project-details"><span className="project-label">Tip:</span> {project.type}</p>
+                      <p className="project-details"><span className="project-label">Lokacija:</span> {project.location}</p>
+                    </>
+                  )}
                 </div>
+
                 <div className="project-actions static-icons">
                   <label className="upload-icon" htmlFor={`file-upload-${project.id}`}>📁</label>
                   <input
@@ -139,7 +205,13 @@ const ProjectPage = () => {
                     onChange={(e) => handleFileUpload(e, project.id)}
                   />
                   <button className="delete-button" onClick={() => handleDeleteProject(project.id)}>🗑️</button>
+
+                  {/* Dodan gumb za urejanje */}
+                  {editingProjectId === project.id ? null : (
+                    <button className="project-edit-button" onClick={() => handleEditClick(project)}>✏️</button>
+                  )}
                 </div>
+
                 <div className="file-list">
                   {files[project.id]?.map((file) => (
                     <div key={file.name} className="file-item">
