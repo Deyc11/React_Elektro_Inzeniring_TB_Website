@@ -36,7 +36,7 @@ nav.navbar {
 }
 
 .home-icon:active {
-  color: #a3222f; /* Barva ob kliku */
+  color: #a3222f;
 }
 
 .right-menu {
@@ -54,10 +54,10 @@ nav.navbar {
   color: #e1fddfe1;
 }
 a.sign-out{
-  text-decoration: none; /* Removes the underline */
-  color: inherit; /* Keeps the text color or customize it */
-  cursor: pointer; /* Makes it look like a button */
-   outline: none; /* Removes the focus outline */
+  text-decoration: none; /* Remova underline */
+  color: inherit;
+  cursor: pointer;
+   outline: none;
 }
 
 /* Box Style*/
@@ -147,8 +147,8 @@ max-height: 500px;
 
 .add-project-body{
   display: flex;
-  flex-direction: column; /* Razporedi elemente navpično */
-  gap: 10px; /* Dodaj razmak med elementi */
+  flex-direction: column;
+  gap: 10px;
   padding-bottom: 10px;
   
 }
@@ -187,7 +187,7 @@ border-radius: 5px;
 
 .button-in-wrapper {
   display: inline-block;
-  background-color: #c42c3c; /* Glavna rdeča barva */
+  background-color: #c42c3c;
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
@@ -198,17 +198,18 @@ border-radius: 5px;
 }
 
 .button-in-wrapper:hover {
-  background-color: #a3222f; /* Temnejša rdeča na hover */
+  background-color: #a3222f;
   border-color: #a3222f;
 }
 
 .button-in-wrapper:active {
-  background-color: #8a1b1f; /* Še temnejša rdeča ob kliku */
+  background-color: #8a1b1f;
 }
 
 .project-documents {
   display: none; /* Skrij privzeti input */
 }
+
 /* Dropdown menu for search results */
 .dropdown-menu-custom {
   position: absolute;

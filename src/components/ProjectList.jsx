@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase"; // Firebase Firestore
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
-import "../styles/koledar.css";
+import "../styles/koledar.css"; // zaradi dela gumba in podobnega obrazca
 
 const ProjectList = ({ hideList }) => {
     const [projects, setProjects] = useState([]);
     const [newProject, setNewProject] = useState({ name: "", type: "", location: "" });
     const [isAddProjectActive, setIsAddProjectActive] = useState(false);
 
-    // 🔥 Naloži projekte iz Firestore
+    // Naloži projekte iz Firestore
     useEffect(() => {
         const fetchProjects = async () => {
             const querySnapshot = await getDocs(collection(db, "projects"));
@@ -22,7 +22,7 @@ const ProjectList = ({ hideList }) => {
         fetchProjects();
     }, []);
 
-    // 🔥 Dodaj nov projekt v Firestore
+    //Dodaj nov projekt v Firestore
     const handleAddProject = async () => {
         if (!newProject.name || !newProject.type || !newProject.location) {
             alert("Prosim, izpolnite vsa polja.");
@@ -39,7 +39,7 @@ const ProjectList = ({ hideList }) => {
         }
     };
 
-    // 🔥 Izbriši projekt iz Firestore
+    //Izbriši projekt iz Firestore
     const handleDeleteProject = async (id) => {
         try {
             await deleteDoc(doc(db, "projects", id));

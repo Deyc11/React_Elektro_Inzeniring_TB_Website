@@ -93,8 +93,8 @@ const ProjectPage = () => {
         console.error("Error updating project:", error);
     }
 };
-///////////////////////////////////////////////////////
-  const handleDeleteProject = async (projectId) => {
+
+const handleDeleteProject = async (projectId) => {
     try {
       await deleteDoc(doc(db, "projects", projectId));
       setProjects(prev => prev.filter(project => project.id !== projectId));

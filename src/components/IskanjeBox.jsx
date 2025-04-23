@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "../firebase"; // Firebase Firestore
+import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const IskanjeBox = () => {
@@ -9,7 +9,7 @@ const IskanjeBox = () => {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const navigate = useNavigate();
 
-  // 🔥 Naloži projekte iz Firestore
+  // Naloži projekte iz Firestore
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -27,7 +27,7 @@ const IskanjeBox = () => {
     fetchProjects();
   }, []);
 
-  // 🔍 Iskanje projektov po imenu
+  //Iskanje projektov po imenu
   const handleSearch = (query) => {
     setSearchQuery(query);
     if (query.trim() === "") {
@@ -42,7 +42,7 @@ const IskanjeBox = () => {
     }
   };
 
-  // 📌 Preusmeritev na /projekti?filter=ime_projekta
+  //Preusmeritev na /projekti?filter=ime_projekta
   const handleProjectClick = (projectName) => {
     navigate(`/projekti?filter=${encodeURIComponent(projectName)}`);
   };

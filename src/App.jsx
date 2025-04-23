@@ -1,19 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from './firebase'; // Uvozi Firebase autentikacijo
+import { auth } from './firebase'; // import za Firebase autentikacijo
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import KoledarPage from './pages/KoledarPage';
 import OdjavaPage from './pages/OdjavaPage';
 import ProjectPage from './pages/ProjectPage';
-import LoginPage from './pages/LoginPage'; // Dodana prijavna stran
+import LoginPage from './pages/LoginPage';
 
 // Komponenta za zaščiten dostop
 const PrivateRoute = ({ element }) => {
   const [user, loading] = useAuthState(auth);
 
-  if (loading) return <div>Nalaganje...</div>; // Lahko kasneje dodaš lepše nalagalno sporočilo
+  if (loading) return <div>Nalaganje...</div>;
   return user ? element : <Navigate to="/login" />;
 };
 

@@ -37,7 +37,7 @@
 
 .project-item {
   display: flex;
-  flex-direction: column; /* Stack items vertically */
+  flex-direction: column;
   align-items: flex-start;
   border-bottom: 1px solid #ddd;
   padding: 15px 10px;
@@ -57,14 +57,12 @@
   background-color: #f5f5f5;
 }
 
-/* Ime projekta */
 .project-name {
   font-size: 1.5rem;
   color: #c42c3c;
   margin: 0 0 10px;
 }
 
-/* Detajli projekta */
 .project-details {
   font-size: 1rem;
   color: #555;
@@ -76,7 +74,6 @@
   color: #333;
 }
 
-/* Prazno stanje */
 .no-projects {
   text-align: center;
   font-size: 1.2rem;
@@ -114,7 +111,7 @@
 /* Dodajanje projektov */
 .project-actions {
   display: flex;
-  flex-wrap: wrap; /* Ensures buttons don’t break the layout */
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
 }
@@ -154,22 +151,20 @@
   text-decoration: underline;
 }
 
-/* Ikona za odstranjevanje datotek */
 .delete-file-button {
   background: none;
   border: none;
-  font-size: 0.8rem; /* Manjša velikost */
-  color: rgba(0, 0, 0, 0.6); /* Črna z nekaj transparentnosti */
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
   cursor: pointer;
-  margin-left: 10px; /* Prostor med imenom datoteke in gumbom */
+  margin-left: 10px;
   transition: color 0.2s;
 }
 
 .delete-file-button:hover {
-  color: rgba(0, 0, 0, 0.9); /* Temnejša ob hoverju */
+  color: rgba(0, 0, 0, 0.9);
 }
 
-/* File list display improvements */
 .file-list {
   display: flex;
   flex-direction: column;
@@ -180,8 +175,8 @@
 .file-item {
   display: flex;
   align-items: center;
-  gap: 5px; /* Space between file icon and name */
-  max-width: 220px; /* Prevents long file names from breaking layout */
+  gap: 5px; 
+  max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -204,7 +199,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-bottom: 10px; /* Adds spacing between icons and file list */
+  margin-bottom: 10px;
 }
 
 .edit-form {
@@ -241,7 +236,7 @@
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  color: #ffc107; /* Rumena barva */
+  color: #ffc107;
   transition: transform 0.2s ease, color 0.3s ease;
 }
 
