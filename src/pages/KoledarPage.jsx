@@ -1,4 +1,4 @@
-// KoledarPage.jsx – Firestore verzija
+// KoledarPage.jsx – Firestore z vizualnim označevanjem dni z dogodki
 import React, { useState, useEffect } from "react";
 import "../styles/Koledar.css";
 import { db } from "../firebase";
@@ -7,7 +7,11 @@ import {
   setDoc,
   getDoc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  collection,
+  getDocs,
+  query,
+  where
 } from "firebase/firestore";
 
 const months = [
@@ -43,12 +47,18 @@ const Koledar = () => {
   };
 
   const fetchMonthEventDays = async () => {
-    // Placeholder: implement fetching all documents of the month
-    // and update `daysWithEvents` accordingly if needed.
+    const q = query(collection(db, "events"), where("month", "==", month + 1), where("year", "==", year));
+    const querySnapshot = await getDocs(q);
+    const days = [];
+    querySnapshot.forEach((doc) => {
+      days.push(doc.data().day);
+    });
+    setDaysWithEvents(days);
   };
 
   useEffect(() => {
     fetchDayEvents();
+    fetchMonthEventDays();
   }, [year, month, activeDay]);
 
   const handleDayClick = (day) => {
@@ -104,6 +114,7 @@ const Koledar = () => {
     setDayEvents(newEvents);
     setNewEvent({ title: "", timeFrom: "", timeTo: "" });
     setIsAddEventActive(false);
+    fetchMonthEventDays(); // osveži vizualno označene dneve
   };
 
   const handleEventComplete = async (index) => {
@@ -122,6 +133,7 @@ const Koledar = () => {
     }
 
     setDayEvents(updatedEvents);
+    fetchMonthEventDays(); // osveži vizualno označene dneve
   };
 
   const formatTime = (time) => {
@@ -151,7 +163,7 @@ const Koledar = () => {
         year === today.getFullYear() &&
         month === today.getMonth();
       const isActive = i === activeDay;
-      const hasEvent = false; // optional: based on `daysWithEvents`
+      const hasEvent = daysWithEvents.includes(i);
 
       days.push(
         <div
